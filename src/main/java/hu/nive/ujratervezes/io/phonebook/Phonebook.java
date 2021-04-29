@@ -1,21 +1,26 @@
 package hu.nive.ujratervezes.io.phonebook;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 
 public class Phonebook {
     public void exportPhonebook(Map<String, String> contacts, String output){
-        String eol = System.getProperty("line.separator");
-
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(output))) {
-        for (Map.Entry<String, String> entry : contacts.entrySet()){
-            bufferedWriter.append((entry.getKey())).append(": ").append(entry.getValue()).append(eol);
+        if (contacts == null || output == null){
+            throw new IllegalArgumentException();
         }
-
-        } catch (IllegalArgumentException | IOException e) {
+        File file = new File(output);
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            for (Map.Entry<String, String> entry : contacts.entrySet()){
+                bufferedWriter.write((entry.getKey()) + ": " + entry.getValue());
+                bufferedWriter.newLine();
+            }
+            bufferedWriter.flush();
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 }
